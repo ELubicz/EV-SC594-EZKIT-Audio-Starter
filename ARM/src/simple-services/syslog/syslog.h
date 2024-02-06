@@ -67,6 +67,9 @@
 #define SYSLOG_NAME        "Console Log"
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 /*!****************************************************************
  * @brief  System log init
  *
@@ -116,5 +119,9 @@ void syslog_printf(char *fmt, ...);
  *
  ******************************************************************/
 void syslog_dump(unsigned max);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

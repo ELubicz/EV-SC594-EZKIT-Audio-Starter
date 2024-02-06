@@ -15,7 +15,7 @@
 #include "shell_printf.h"
 #include "linenoise.h"
 #include "term.h"
-#include "version.h"
+#include "version_cfg.h"
 
 #ifdef printf
 #undef printf

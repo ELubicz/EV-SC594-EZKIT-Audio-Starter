@@ -35,9 +35,9 @@
 #define ADI_ETHER_NUM_MBOX_EVENTS       (20)
 
 typedef enum ADI_ETHER_EMAC_PORT {
-    EMAC_UNKNOWN = 0,
-    EMAC0,
-    EMAC1
+    ADI_ETHER_EMAC_PORT_EMAC_UNKNOWN = 0,
+    ADI_ETHER_EMAC_PORT_EMAC0,
+    ADI_ETHER_EMAC_PORT_EMAC1
 } ADI_ETHER_EMAC_PORT;
 
 /***********************************************************************

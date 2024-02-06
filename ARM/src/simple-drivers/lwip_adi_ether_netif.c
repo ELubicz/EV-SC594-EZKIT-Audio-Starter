@@ -623,9 +623,9 @@ adi_ether_netif_low_level_init(struct netif *netif)
     netif->flags = NETIF_FLAG_BROADCAST | NETIF_FLAG_ETHARP;
 
     /* Set ADI EMAC driver entry point */
-    if (adi_ether->port == EMAC0) {
+    if (adi_ether->port == ADI_ETHER_EMAC_PORT_EMAC0) {
         driverEntry = &GEMAC0DriverEntry;
-    } else if (adi_ether->port == EMAC1) {
+    } else if (adi_ether->port == ADI_ETHER_EMAC_PORT_EMAC1) {
         driverEntry = &GEMAC1DriverEntry;
     } else {
         return;

@@ -60,6 +60,9 @@
 #include "ethernet_init.h"
 #include "ipc.h"
 
+#include "tensorflow/lite/core/c/common.h"
+#include "tflm_test.h"
+
 /* Application context */
 APP_CONTEXT mainAppContext;
 
@@ -311,14 +314,14 @@ static char *cfgStrDup(const char *value)
 
 static void setAppDefaults(APP_CFG *cfg)
 {
-    cfg->eth0.port = EMAC0;
+    cfg->eth0.port = ADI_ETHER_EMAC_PORT_EMAC0;
     cfg->eth0.ip_addr = cfgStrDup(DEFAULT_ETH0_IP_ADDR);
     cfg->eth0.gateway_addr = cfgStrDup(DEFAULT_ETH0_GW_ADDR);
     cfg->eth0.netmask = cfgStrDup(DEFAULT_ETH0_NETMASK);
     cfg->eth0.static_ip = DEFAULT_ETH0_STATIC_IP;
     cfg->eth0.default_iface = DEFAULT_ETH0_DEFAULT_IFACE;
 
-    cfg->eth1.port = EMAC1;
+    cfg->eth1.port = ADI_ETHER_EMAC_PORT_EMAC1;
     cfg->eth1.ip_addr = cfgStrDup(DEFAULT_ETH1_IP_ADDR);
     cfg->eth1.gateway_addr = cfgStrDup(DEFAULT_ETH1_GW_ADDR);
     cfg->eth1.netmask = cfgStrDup(DEFAULT_ETH1_NETMASK);
@@ -472,6 +475,7 @@ static portTASK_FUNCTION( startupTask, pvParameters )
     /* Enable main MCLK/BCLK for a synchronous start */
     enable_mclk(context);
 
+#if 0
     /* Initialize the Ethernet related HW */
     eth_hardware_init(context);
 
@@ -502,6 +506,7 @@ static portTASK_FUNCTION( startupTask, pvParameters )
 
     /* Start A2B slave mode handling task */
     a2b_slave_init(context);
+#endif
 
     /* Start the housekeeping tasks */
     xTaskCreate( houseKeepingTask, "HouseKeepingTask", GENERIC_TASK_STACK_SIZE,
@@ -512,6 +517,13 @@ static portTASK_FUNCTION( startupTask, pvParameters )
 
     /* Initialize the shell */
     shell_init(&context->shell, term_out, term_in, SHELL_MODE_BLOCKING, NULL);
+
+    TfLiteStatus tflmRetStatus = tflm_test();
+    if (tflmRetStatus == kTfLiteOk) {
+        syslog_printf("TensorFlow Lite Micro test passed\n");
+    } else {
+        syslog_printf("TensorFlow Lite Micro test failed\n");
+    }
 
     /* Execute shell initialization command file */
     execShellCmdFile(&context->shell);
